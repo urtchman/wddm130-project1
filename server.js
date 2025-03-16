@@ -59,7 +59,12 @@ app.get('/', async (req, res) => {
 });
 
 // Exchange Rates Page
-app.get('/exchange-rates', (req, res) => {
+app.get('/exchange-rates', (req, res) => { 
+    res.render('exchange-rates', { title: "Exchange Rates", exchangeRates:app.locals.exchangeRates, currencies: app.locals.currencies });
+});
+
+// About Page
+app.get('/about', (req, res) => {
     const aboutData = {
         intro: 'Naira Swap is a trusted exchange platform that offers seamless currency exchange services between the Nigerian Naira (NGN) and other major currencies.',
         mission: 'To provide fast, secure, and transparent currency exchange services, ensuring customers get the best rates with maximum convenience.',
@@ -72,12 +77,7 @@ app.get('/exchange-rates', (req, res) => {
             {title: 'Integrity', desc: 'Upholding honesty and trustworthiness in all operations.'}
         ]
     }
-    res.render('exchange-rates', { title: "Exchange Rates", exchangeRates:app.locals.exchangeRates, currencies: app.locals.currencies, content:aboutData });
-});
-
-// About Page
-app.get('/about', (req, res) => {
-    res.render('about', { title: "About Naira Swap" });
+    res.render('about', { title: "About Naira Swap", content:aboutData });
 });
 
 // Contact Page
