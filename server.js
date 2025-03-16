@@ -82,7 +82,13 @@ app.get('/about', (req, res) => {
 
 // Contact Page
 app.get('/contact', (req, res) => {
-    res.render('contact', { title: "Contact Us" });
+    res.render('contact', { 
+        title: "Contact Us", 
+        intro:'We’d love to hear from you! Whether you have a question, feedback, or need assistance, feel free to reach out.',
+        phone: '+1 (437) 766 2790',
+        email: 'urtchman04@yahoo.co.uk',
+        address: '45 Autumn Glen Circle, Etobicoke M9W 6B3'
+    });
 });
 
 // My Account Page
