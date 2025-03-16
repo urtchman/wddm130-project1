@@ -1,0 +1,47 @@
+{
+  "name": "naira-swap",
+  "version": "1.0.0",
+  "description": "Web app for swapping Naira into Canadian Dollar, US Dollar, British Pound and Euro",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "tw:build": "tailwindcss build -i ./public/css/tailwind.css -o ./public/css/main.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urtchman/wddm130-project1.git"
+  },
+  "keywords": [
+    "Node.js",
+    "CSS",
+    "SCSS",
+    "HTML",
+    "JavaScript",
+    "Express",
+    "Naira-Swap",
+    "Naira",
+    "USD",
+    "CAD",
+    "GBP",
+    "Euro"
+  ],
+  "author": "Uche Emmanuel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urtchman/wddm130-project1/issues"
+  },
+  "homepage": "https://github.com/urtchman/wddm130-project1#readme",
+  "dependencies": {
+    "axios": "^1.8.3",
+    "body-parser": "^1.20.3",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "daisyui": "^5.0.4",
+    "tailwindcss": "^3.4.17"
+  }
+}

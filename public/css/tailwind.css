@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* This is to ensure DaisyUI is included */
+@layer components {
+    @import "daisyui";
+}

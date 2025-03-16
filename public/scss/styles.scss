@@ -1,0 +1,49 @@
+// Colors
+$primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+$footer-bg: black;
+$footer-text: white;
+
+// Header styles
+.header {
+    background: $primary-gradient;
+    padding: 1rem 0;
+
+    .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .nav-link {
+        font-size: 1rem;
+        margin-left: 1rem;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+            color: #ffcc00;
+        }
+    }
+}
+
+// Main content
+.main-content {
+    flex: 1;
+    background-color: white;
+    padding: 2rem 0;
+}
+
+// Footer styles
+.footer {
+    background-color: $footer-bg;
+    color: $footer-text;
+    padding: 1.5rem 0;
+    margin-top: auto;
+}
+
+// Button hover effects
+.btn {
+    transition: transform 0.2s;
+    
+    &:hover {
+        transform: scale(1.05);
+    }
+}
