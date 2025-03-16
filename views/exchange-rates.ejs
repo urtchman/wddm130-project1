@@ -8,8 +8,7 @@
     <link src="/css/styles.css" rel="stylesheet">
     <link rel="icon" href="/images/naira.png">
     <script>
-        const currencies = <%- JSON.stringify(currencies) %>;
-        
+        const currencies = <%- JSON.stringify(currencies) %>; 
     </script>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
@@ -34,35 +33,44 @@
     <main class="container mx-auto p-6 flex-1">
         <!-- Introduction Card -->
         <section class="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="grid grid-cols-1 gap-6">
                 <form>
-                    <h1>Exchange Rates</h1>
-                    <div>
-                        Base Currency: 
-                        <select id="base-currency">
+                    <h1 class="text-2xl font-bold mb-4 text-gray-800">Exchange Rates</h1>
+    
+                    <!-- Base Currency Selector -->
+                    <div class="flex flex-col md:flex-row items-center gap-2">
+                        <label for="base-currency" class="font-semibold text-gray-700">Base Currency:</label>
+                        <select id="base-currency" class="border rounded px-3 py-2 focus:ring focus:ring-blue-300" onchange="loadRates()">
                             <!-- Add currency options here -->
                         </select>
                     </div>
-                    <div class="scrollable-div">
-                        <div class="exchange-rates">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Full Name</th>
-                                        <th>Currency</th>
-                                        <th>Exchange Rate</th>
+    
+                    <!-- Exchange Rates Table -->
+                    <div class="max-h-[400px] overflow-y-auto border rounded-lg shadow-md p-4 bg-white mt-4">
+                        <table class="w-[90%] mx-auto border-collapse">
+                            <thead class="bg-gray-800 text-white sticky top-0">
+                                <tr>
+                                    <th class="p-3 text-left border-b">Full Name</th>
+                                    <th class="p-3 text-left border-b">Currency</th>
+                                    <th class="p-3 text-left border-b">Exchange Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rates-content" class="divide-y">
+                                <% for (const currency in exchangeRates) { %>
+                                    <tr class="hover:bg-gray-100">
+                                        <td class="p-3 border-b"><%= currencies[currency] %></td>
+                                        <td class="p-3 border-b font-semibold"><%= currency %></td>
+                                        <td class="p-3 border-b text-green-600"><%= exchangeRates[currency] %></td>
                                     </tr>
-                                </thead>
-                                <tbody id="rates-content">
-        
-                                </tbody>
-                            </table> 
-                        </div>
+                                <% } %>
+                            </tbody>
+                        </table> 
                     </div>
                 </form>
             </div>
         </section> 
     </main>
+    
 
     <!-- Footer (Fixed at Bottom) -->
     <footer class="bg-black text-white text-center py-4 w-full mt-auto">
