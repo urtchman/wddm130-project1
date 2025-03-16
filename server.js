@@ -39,7 +39,7 @@ app.locals.currencies = {};
         console.error("Failed to fetch Naira exchange rates:", error.message);
     }
     try { 
-        app.locals.exchangeRates = await requestHandler.exchangeRates(); // Store exchange rates globally 
+        app.locals.exchangeRates = await requestHandler.exchangeRates('USD'); // Store exchange rates globally 
         const rates2 = {};
         for (const key in app.locals.exchangeRates) {
             if (app.locals.exchangeRates.hasOwnProperty(key)) {
@@ -47,7 +47,7 @@ app.locals.currencies = {};
             }
         }
         app.locals.exchangeRates = rates2;
-        console.log(app.locals.exchangeRates)
+        //console.log(app.locals.exchangeRates)
     } catch (error) {
         console.error("Failed to fetch exchange rates:", error.message);
     }
@@ -60,7 +60,19 @@ app.get('/', async (req, res) => {
 
 // Exchange Rates Page
 app.get('/exchange-rates', (req, res) => {
-    res.render('exchange-rates', { title: "Exchange Rates", exchangeRates:app.locals.exchangeRates, currencies: app.locals.currencies });
+    const aboutData = {
+        intro: 'Naira Swap is a trusted exchange platform that offers seamless currency exchange services between the Nigerian Naira (NGN) and other major currencies.',
+        mission: 'To provide fast, secure, and transparent currency exchange services, ensuring customers get the best rates with maximum convenience.',
+        vision: 'To become the leading exchange platform for the Nigerian Naira, bridging the gap between global currencies through technology and innovation.',
+        coreValues: [
+            {title: 'Transparency', desc: 'Providing real-time and fair exchange rates.'},
+            {title: 'Security', desc: 'Ensuring all transactions are safe and secure'},
+            {title: 'Customer Satisfaction', desc: 'Prioritizing the needs of our users.'},
+            {title: 'Innovation', desc: 'Leveraging technology for better exchange solutions.'},
+            {title: 'Integrity', desc: 'Upholding honesty and trustworthiness in all operations.'}
+        ]
+    }
+    res.render('exchange-rates', { title: "Exchange Rates", exchangeRates:app.locals.exchangeRates, currencies: app.locals.currencies, content:aboutData });
 });
 
 // About Page
@@ -76,6 +88,19 @@ app.get('/contact', (req, res) => {
 // My Account Page
 app.get('/login', (req, res) => {
     res.render('login', { title: "My Account" });
+});
+
+// My Account Page
+app.post('/api/rates', async(req, res) => {
+    app.locals.exchangeRates = await requestHandler.exchangeRates(); // Store exchange rates globally 
+    const rates2 = {};
+    for (const key in app.locals.exchangeRates) {
+        if (app.locals.exchangeRates.hasOwnProperty(key)) {
+            rates2[key.slice(-3)] = app.locals.exchangeRates[key];
+        }
+    }
+    app.locals.exchangeRates = rates2;
+    res.json(app.locals.exchangeRates);
 });
 
 // Start Server
