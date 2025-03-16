@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" href="/images/naira.png"> 
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <header class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-5 px-6 flex justify-between items-center relative">
+        <div class="text-2xl font-extrabold">
+            <img src="/images/naira.png" alt="Naira" class="inline-block w-10 h-10 mr-2">
+            NAIRA SWAP
+        </div>
+        <nav>
+            <button id="menu-btn" class="md:hidden block text-white text-3xl">&#9776;</button>
+            <ul id="menu" class="hidden md:flex flex-col md:flex-row md:space-x-6 text-lg mt-4 md:mt-0 absolute md:relative top-full left-0 w-full md:w-auto bg-blue-700 md:bg-transparent">
+                <li><a href="/" class="block py-2 px-4 hover:text-gray-300">Home</a></li>
+                <li><a href="/exchange-rates" class="block py-2 px-4 hover:text-gray-300">Exchange Rates</a></li>
+                <li><a href="/about" class="block py-2 px-4 hover:text-gray-300">About</a></li>
+                <li><a href="/contact" class="block py-2 px-4 hover:text-gray-300">Contact</a></li>
+                <li><a href="/login" class="block py-2 px-4 hover:text-gray-300">My Account</a></li>
+            </ul>
+        </nav> 
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 flex-1">
+        <!-- About Card -->
+        <section class="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-4xl font-bold text-blue-700 mb-4 text-center">About Naira Swap</h1>
+            <p class="text-gray-600 text-lg text-center mb-6">
+                Naira Swap is a trusted exchange platform that offers seamless currency exchange services 
+                between the Nigerian Naira (NGN) and other major currencies. 
+            </p>
+
+            <!-- Mission, Vision, Core Values -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Mission -->
+                <div class="bg-blue-50 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-blue-600">Our Mission</h2>
+                    <p class="text-gray-700 mt-2">
+                        To provide fast, secure, and transparent currency exchange services, ensuring 
+                        customers get the best rates with maximum convenience.
+                    </p>
+                </div>
+
+                <!-- Vision -->
+                <div class="bg-blue-50 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-blue-600">Our Vision</h2>
+                    <p class="text-gray-700 mt-2">
+                        To become the leading exchange platform for the Nigerian Naira, 
+                        bridging the gap between global currencies through technology and innovation.
+                    </p>
+                </div>
+
+                <!-- Core Values -->
+                <div class="col-span-1 md:col-span-2 bg-gray-50 p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-blue-600 text-center">Our Core Values</h2>
+                    <ul class="list-disc list-inside text-gray-700 mt-2 text-lg">
+                        <li><span class="font-bold">Transparency:</span> Providing real-time and fair exchange rates.</li>
+                        <li><span class="font-bold">Security:</span> Ensuring all transactions are safe and secure.</li>
+                        <li><span class="font-bold">Customer Satisfaction:</span> Prioritizing the needs of our users.</li>
+                        <li><span class="font-bold">Innovation:</span> Leveraging technology for better exchange solutions.</li>
+                        <li><span class="font-bold">Integrity:</span> Upholding honesty and trustworthiness in all operations.</li>
+                    </ul>
+                </div>
+
+                <!-- Why Choose Us -->
+                <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-semibold text-blue-600 text-center">Why Choose Naira Swap?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="text-center">
+                            <img src="/images/fast.png" alt="Fast Transactions" class="w-16 mx-auto mb-2">
+                            <p class="text-lg font-medium">Fast Transactions</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="/images/security.png" alt="Secure Payments" class="w-16 mx-auto mb-2">
+                            <p class="text-lg font-medium">Secure Payments</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="/images/best-rates.png" alt="Best Exchange Rates" class="w-16 mx-auto mb-2">
+                            <p class="text-lg font-medium">Best Exchange Rates</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> 
+    </main>
+
+    <!-- Footer (Fixed at Bottom) -->
+    <footer class="bg-black text-white text-center py-4 w-full mt-auto">
+        <p class="text-lg">&copy; 2025 Naira Swap. All rights reserved.</p>
+    </footer> 
+
+    <script>
+        const menuBtn = document.getElementById('menu-btn');
+        const menu = document.getElementById('menu');
+
+        menuBtn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
