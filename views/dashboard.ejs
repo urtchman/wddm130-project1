@@ -18,11 +18,11 @@
 
       <!-- Links for large screens -->
       <nav class="hidden md:flex space-x-6">
-        <a href="#" class="hover:text-gray-400">Dashboard</a>
-        <a href="#" class="hover:text-gray-400">Exchange Naira</a>
-        <a href="#" class="hover:text-gray-400">History</a>
-        <a href="#" class="hover:text-gray-400">Settings</a>
-        <a href="#" class="hover:text-gray-400">Logout</a>
+        <a href="/dashboard" class="hover:text-gray-400">Dashboard</a>
+        <a href="/dashboard/swap" class="hover:text-gray-400">Exchange Naira</a>
+        <a href="/dashboard/history" class="hover:text-gray-400">History</a>
+        <a href="/dashboard/settings" class="hover:text-gray-400">Settings</a>
+        <a href="/logout" class="hover:text-gray-400">Logout</a>
       </nav>
 
       <!-- Hamburger for small screens -->
@@ -37,11 +37,11 @@
 
     <!-- Mobile menu -->
     <div id="mobileMenu" class="md:hidden hidden mt-4 space-y-4">
-      <a href="#" class="block text-white hover:text-gray-400">Dashboard</a>
-      <a href="#" class="block text-white hover:text-gray-400">Exchange Naira</a>
-      <a href="#" class="block text-white hover:text-gray-400">History</a>
-      <a href="#" class="block text-white hover:text-gray-400">Settings</a>
-      <a href="#" class="block text-white hover:text-gray-400">Logout</a>
+      <a href="/dashboard" class="block text-white hover:text-gray-400">Dashboard</a>
+      <a href="/dashboard/swap" class="block text-white hover:text-gray-400">Exchange Naira</a>
+      <a href="/dashboard/history" class="block text-white hover:text-gray-400">History</a>
+      <a href="/dashboard/settings" class="block text-white hover:text-gray-400">Settings</a>
+      <a href="/logout" class="block text-white hover:text-gray-400">Logout</a>
     </div>
   </header>
 
@@ -51,32 +51,32 @@
       <!-- Card 1 NGN -->
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <h3 class="text-xl font-semibold mb-4">NGN</h3>
-        <p class="text-4xl font-bold">₦ 50,000</p>
+        <p class="text-4xl font-bold">₦ <%=wallet.naira%></p>
       </div>
 
       <!-- Card 2 CAD -->
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <h3 class="text-xl font-semibold mb-4">CAD</h3>
-        <p class="text-4xl font-bold">$ 1,200</p>
+        <p class="text-4xl font-bold">$ <%=wallet.cad%></p>
       </div>
 
       <!-- Card 3 USD -->
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <h3 class="text-xl font-semibold mb-4">USD</h3>
-        <p class="text-4xl font-bold">$ 1,000</p>
+        <p class="text-4xl font-bold">$ <%=wallet.usd%></p>
       </div>
 
       <!-- Card 4 GBP -->
       <div class="bg-white p-6 rounded-lg shadow-lg text-center">
         <h3 class="text-xl font-semibold mb-4">GBP</h3>
-        <p class="text-4xl font-bold">£ 850</p>
+        <p class="text-4xl font-bold">£ <%=wallet.gbp%></p>
       </div>
     </div>
 
     <!-- Additional Card for EUR -->
     <div class="bg-white p-6 rounded-lg shadow-lg text-center mt-6">
       <h3 class="text-xl font-semibold mb-4">EUR</h3>
-      <p class="text-4xl font-bold">€ 900</p>
+      <p class="text-4xl font-bold">€ <%=wallet.euro%></p>
     </div>
   </div>
 
