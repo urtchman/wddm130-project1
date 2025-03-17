@@ -2,8 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto'); 
-const users = require('./src/loadUsers'); // Array to store user data
 const session = require("express-session");
+const users = require('./src/loadUsers'); // Array to store user data
+const wallets = require('./src/loadWallets'); // Array to store wallets data
 
 
 const requestHandler = require("./src/requestHandler");
@@ -20,7 +21,7 @@ app.use(bodyParser.json());
 
 // 🔐 Configure session
 app.use(session({
-    secret: "petuteDWY", //  
+    secret: "petuteDWY",   
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true in production with HTTPS
@@ -147,9 +148,22 @@ app.post("/login", (req, res) => {
     }
 });
 
-// My Account Page
+// api rates
 app.post('/api/rates', async(req, res) => {
     app.locals.exchangeRates = await requestHandler.exchangeRates(); // Store exchange rates globally 
+    const rates2 = {};
+    for (const key in app.locals.exchangeRates) {
+        if (app.locals.exchangeRates.hasOwnProperty(key)) {
+            rates2[key.slice(-3)] = app.locals.exchangeRates[key];
+        }
+    }
+    app.locals.exchangeRates = rates2;
+    res.json(app.locals.exchangeRates);
+});
+
+// api rates
+app.post('/api/swap', async(req, res) => {
+    const nrates = await requestHandler.getNairaRates(); //  
     const rates2 = {};
     for (const key in app.locals.exchangeRates) {
         if (app.locals.exchangeRates.hasOwnProperty(key)) {
@@ -171,8 +185,34 @@ const isAuthenticated = (req, res, next) => {
 
 // 🏠 PROTECTED DASHBOARD Route
 app.get("/dashboard", isAuthenticated, (req, res) => {
-    const wallet = getWalletByUserId(req.session.user.id);
+    const wallet = wallets.find(w => w.user_id === req.session.user.id);
     res.render('dashboard', {title: 'Dashboard', user: req.session.user, wallet});
+});
+// PROTECTED SWAP Route
+app.get("/dashboard/swap", isAuthenticated, (req, res) => {
+    const wallet = wallets.find(w => w.user_id === req.session.user.id);
+    res.render('swap', {title: 'Swap || Dashboard', user: req.session.user, wallet});
+});
+// PROTECTED HISTORY Route
+app.get("/dashboard/history", isAuthenticated, (req, res) => {
+    const wallet = wallets.find(w => w.user_id === req.session.user.id);
+    const transactions = [
+        {
+            date: '2025-03-15 15:00:00',
+            amount: 45000,
+            currency: 'USD',
+            convertedAmount: 28.125,
+            rate: 1600
+        },
+        {
+            date: '2025-03-15 15:00:00',
+            amount: 11000,
+            currency: 'CAD',
+            convertedAmount: 10,
+            rate: 1100
+        },
+    ];
+    res.render('history', {title: 'Swap || Dashboard', user: req.session.user, wallet, transactions});
 });
 
 // 🚪 LOGOUT Route
@@ -186,39 +226,7 @@ function generateSHA1Hash(data) {
     return crypto.createHash('sha1').update(data).digest('hex');
 }
 
-// Function to fetch wallet details by user_id
-function getWalletByUserId(userId) {
-    return new Promise((resolve, reject) => {
-      const results = [];
-  
-      fs.createReadStream('db/wallets.csv')  
-        .pipe(csv())
-        .on('data', (row) => {
-          if (row.user_id == userId) {  // Matching the user_id
-            results.push({
-              id: row.user_id,
-              naira: parseFloat(row.naira),
-              cad: parseFloat(row.cad),
-              usd: parseFloat(row.usd),
-              gbp: parseFloat(row.gbp),
-              euro: parseFloat(row.euro),
-              created_at: row.created_at,
-              updated_at: row.updated_at
-            });
-          }
-        })
-        .on('end', () => {
-          if (results.length > 0) {
-            resolve(results[0]);  // Return the first matched user wallet
-          } else {
-            reject('User not found.');
-          }
-        })
-        .on('error', (err) => {
-          reject(err);
-        });
-    });
-  }
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
