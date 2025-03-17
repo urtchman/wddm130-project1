@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const crypto = require('crypto'); 
 const users = require('./src/loadUsers'); // Array to store user data
+const session = require("express-session");
 
 
 const requestHandler = require("./src/requestHandler");
@@ -15,8 +16,18 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// 🔐 Configure session
+app.use(session({
+    secret: "petuteDWY", //  
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true in production with HTTPS
+}));
 
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files (CSS, images, JS)
+app.use(express.static(path.join(__dirname, 'uploads'))); // Serve static files (CSS, images, JS)
 
 // Set EJS as the templating engine
 app.set('view engine', 'ejs');
@@ -98,7 +109,8 @@ app.get('/contact', (req, res) => {
 
 // My Account Page
 app.get('/login', (req, res) => {
-    res.render('login', { title: "Login" });
+    const errorMessage = req.query.error ? "Invalid email or password. Try again." : "";
+    res.render('login', { title: "Login",  errorMessage});
 });
 
 app.post("/login", (req, res) => {
@@ -115,14 +127,23 @@ app.post("/login", (req, res) => {
     }
 
     // Hash input password to compare (since stored passwords are hashed)
-    const inputHash = bcrypt.createHash('sha1').update(password).digest('hex');
-
+    const inputHash = generateSHA1Hash(password); 
     if (user.password === inputHash) {
         console.log(`✅ Login successful for ${email}`);
+         // Store user data in session
+         req.session.user = {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            passport: user.passport,
+            last_login: user.last_login,
+            status: 1,
+            logs: user.logs+1
+        };
         return res.redirect("/dashboard"); // Redirect to dashboard
     } else {
         console.log("❌ Invalid password");
-        return res.status(401).send("Invalid email or password");
+        return res.redirect("/login?error=invalid"); // Redirect to dashboard
     }
 });
 
@@ -139,10 +160,65 @@ app.post('/api/rates', async(req, res) => {
     res.json(app.locals.exchangeRates);
 });
 
+// 🔐 Middleware to protect routes
+const isAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+        next(); // User is logged in, proceed
+    } else {
+        res.redirect("/login"); // Redirect to login if not authenticated
+    }
+};
+
+// 🏠 PROTECTED DASHBOARD Route
+app.get("/dashboard", isAuthenticated, (req, res) => {
+    const wallet = getWalletByUserId(req.session.user.id);
+    res.render('dashboard', {title: 'Dashboard', user: req.session.user, wallet});
+});
+
+// 🚪 LOGOUT Route
+app.get("/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login"); // Redirect to login after logout
+    });
+});
+
 function generateSHA1Hash(data) {
     return crypto.createHash('sha1').update(data).digest('hex');
 }
 
+// Function to fetch wallet details by user_id
+function getWalletByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      const results = [];
+  
+      fs.createReadStream('db/wallets.csv')  
+        .pipe(csv())
+        .on('data', (row) => {
+          if (row.user_id == userId) {  // Matching the user_id
+            results.push({
+              id: row.user_id,
+              naira: parseFloat(row.naira),
+              cad: parseFloat(row.cad),
+              usd: parseFloat(row.usd),
+              gbp: parseFloat(row.gbp),
+              euro: parseFloat(row.euro),
+              created_at: row.created_at,
+              updated_at: row.updated_at
+            });
+          }
+        })
+        .on('end', () => {
+          if (results.length > 0) {
+            resolve(results[0]);  // Return the first matched user wallet
+          } else {
+            reject('User not found.');
+          }
+        })
+        .on('error', (err) => {
+          reject(err);
+        });
+    });
+  }
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
