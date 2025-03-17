@@ -1,43 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%=title%></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 font-sans flex flex-col min-h-screen">
-
-  <!-- Navbar -->
-  <header class="bg-gray-800 text-white p-4">
-    <div class="flex justify-between items-center">
-      <div class="flex items-center space-x-4">
-        <img src="/passports/<%=user.passport%>" alt="<%=user.name%>" class="rounded-full max-h-16">
-        <span class="text-lg font-semibold"><%=user.name%></span>
-      </div>
-      <nav class="hidden md:flex space-x-6">
-        <a href="/dashboard" class="hover:text-gray-400">Dashboard</a>
-        <a href="/dashboard/swap" class="hover:text-gray-400">Exchange Naira</a>
-        <a href="/dashboard/history" class="hover:text-gray-400">History</a>
-        <a href="/dashboard/settings" class="hover:text-gray-400">Settings</a>
-        <a href="/logout" class="hover:text-gray-400">Logout</a>
-      </nav>
-      <div class="md:hidden">
-        <button id="hamburger" class="text-white focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div id="mobileMenu" class="md:hidden hidden mt-4 space-y-4">
-      <a href="/dashboard" class="block text-white hover:text-gray-400">Dashboard</a>
-      <a href="/dashboard/swap" class="block text-white hover:text-gray-400">Exchange Naira</a>
-      <a href="/dashboard/history" class="block text-white hover:text-gray-400">History</a>
-      <a href="/dashboard/settings" class="block text-white hover:text-gray-400">Settings</a>
-      <a href="/logout" class="block text-white hover:text-gray-400">Logout</a>
-    </div>
-  </header>
+<%- include('partials/dashboard-top.ejs')%>
 
   <!-- History Section -->
   <div class="flex-grow container mx-auto px-4 py-6">
@@ -72,18 +33,4 @@
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white py-4 mt-auto">
-    <div class="container mx-auto text-center">
-      <p>&copy; 2025. All rights reserved. <%=user.name%></p>
-    </div>
-  </footer>
-
-  <!-- JavaScript for Hamburger Menu -->
-  <script>
-    document.getElementById('hamburger').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.toggle('hidden');
-    });
-  </script>
-</body>
-</html>
+  <%- include('partials/dashboard-bottom.ejs')%>
