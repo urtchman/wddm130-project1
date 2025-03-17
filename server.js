@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const crypto = require('crypto'); 
+const users = require('./src/loadUsers'); // Array to store user data
+
 
 const requestHandler = require("./src/requestHandler");
 //const swapConfig = require('./src/config/swapConfig');  
@@ -11,6 +14,8 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files (CSS, images, JS)
 
 // Set EJS as the templating engine
@@ -19,7 +24,7 @@ app.set('view engine', 'ejs');
 // Store exchange rates globally
 app.locals.rates = {}; // Initialize an empty object
 app.locals.currencies = {};
-
+app.locals.users = users;
 // Fetch Naira exchange rates at server startup and store them in app.locals
 (async () => {
     try { 
@@ -93,7 +98,32 @@ app.get('/contact', (req, res) => {
 
 // My Account Page
 app.get('/login', (req, res) => {
-    res.render('login', { title: "My Account" });
+    res.render('login', { title: "Login" });
+});
+
+app.post("/login", (req, res) => {
+    const { email, password } = req.body;
+
+    console.log(`🔍 Login Attempt: ${email}`);
+
+    // Find user by email
+    const user = users.find(user => user.email === email);
+
+    if (!user) {
+        console.log("❌ User not found");
+        return res.status(401).send("Invalid email or password");
+    }
+
+    // Hash input password to compare (since stored passwords are hashed)
+    const inputHash = bcrypt.createHash('sha1').update(password).digest('hex');
+
+    if (user.password === inputHash) {
+        console.log(`✅ Login successful for ${email}`);
+        return res.redirect("/dashboard"); // Redirect to dashboard
+    } else {
+        console.log("❌ Invalid password");
+        return res.status(401).send("Invalid email or password");
+    }
 });
 
 // My Account Page
@@ -108,6 +138,10 @@ app.post('/api/rates', async(req, res) => {
     app.locals.exchangeRates = rates2;
     res.json(app.locals.exchangeRates);
 });
+
+function generateSHA1Hash(data) {
+    return crypto.createHash('sha1').update(data).digest('hex');
+}
 
 // Start Server
 app.listen(PORT, () => {
