@@ -1,0 +1,120 @@
+<%- include('partials/dashboard-top.ejs')%>
+  <!-- Swap Naira Section -->
+  <div class="flex-grow container mx-auto px-4 py-6">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg mx-auto text-center">
+      <h2 class="text-2xl font-bold mb-4">Deposit Naira</h2>
+      <div class="mb-4">
+        <label for="nairaAmount" class="block text-left font-medium">Enter Naira Amount:</label>
+        <input type="number" id="nairaAmount" class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300" placeholder="Enter amount in NGN">
+        <div><small>Balance: ₦<%=wallet.naira%></small></div>
+      </div>
+       
+      <button id="swapBtn" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700">Next</button>
+      <p id="swapResult" class="mt-4 text-lg font-semibold"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4 mt-auto">
+    <div class="container mx-auto text-center">
+      <p>&copy; 2025. All rights reserved. <%=user.name%></p>
+    </div>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+  <script src="https://inlinepay.budpay.com/budpay-inline-custom.js"></script>
+
+  <!-- JavaScript for Hamburger Menu & Swap Functionality -->
+  <script>
+    const names = '<%=user.name%>';
+    const arrNames = names.replace('  ', ' ').split(' ');
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    document.getElementById('swapBtn').addEventListener('click', async() => {
+        const nairaAmount = parseFloat(document.getElementById('nairaAmount').value); 
+        
+        if (!nairaAmount || nairaAmount <= 0) {
+            document.getElementById('swapResult').textContent = 'Please enter a valid amount.';
+            return;
+        }
+        payWithBudPay(nairaAmount);
+        function payWithBudPay(amount) {  
+            BudPayCheckout({
+                key: 'pk_test_cuii3qi3zk3vo2l60nohlj3ymx0k1tapbewr9y', // Replace with your public key
+                email: '<%=user.email%>',
+                amount: nairaAmount,
+                first_name: arrNames[0],
+                last_name: arrNames[1],
+                currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+                reference: '' + Math.floor((Math.random() * 100000000000) + 1) + new Date().getSeconds() + new Date().getMilliseconds(), // generates a pseudo-unique reference. Please replace with a reference you generated. or remove the line entirely so our API will generate one for you
+                callback: function(response) {
+                    //this happens after the payment is completed successfully
+                    var reference = response.reference;
+                    console.log(response);
+                    //updateBudPay(document.getElementById('amount').value, response.reference);
+                    alert('Payment complete! Reference: ' + reference + ', Status: ' + response.status);
+                },
+                onClose: function (response) {
+                    console.log(response);
+                    alert('Transaction was not completed, window closed.');
+                },
+                custom_fields: {
+                    tax_pay_transaction: "",
+                    tax_pay_type: "",
+                    agency_code: "",
+                    revenue_code: "",
+                    revenue_credit_acc: "",
+                    cbn_code: "",
+                }
+            });
+        }
+
+        function updateBudPay(amount, transRef) {
+            $.ajax({
+                url: '/api/update-payment',
+                method: 'POST', //
+                data: JSON.stringify({ amount:amount, TransRef: transRef }),
+                contentType: "application/json",
+                success: function (data) {
+                    swal.close();
+                    console.log(data);
+
+                    if (data.status == "success") {
+                        document.getElementById('swapResult').textContent = data.message;
+                    }
+                },
+                error: function (jqXHR, textStatus, error) {
+                } 
+            });
+        }
+      // Send data to backend
+      /*try {
+            const response = await fetch('/api/swap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount:nairaAmount, currency:currency.toUpperCase() })
+            });
+
+            const data = await response.json();
+        
+            if (response.ok) { 
+                const convertedAmount = data.converted.toFixed(5);
+            } else {
+                showMessage(data.error || "Signup failed", "red");
+            }
+        } catch (error) {
+            showMessage("Error connecting to server", "red");
+        }*/
+        //const exchangeRates = { cad: 0.0027, usd: 0.0011, gbp: 0.00085, eur: 0.0010 };
+        //const convertedAmount = (nairaAmount * exchangeRates[currency]).toFixed(2);
+        //document.getElementById('swapResult').textContent = `You will get approximately ${convertedAmount} ${currency.toUpperCase()}`;
+        //alert('This is just a demo')
+    });
+
+    
+
+  </script>
+</body>
+</html>
